@@ -74,5 +74,74 @@ reference doc: [https://github.com/kennethreitz/dj-database-url](https://github.
 
 ## Procfile-based application
 references: [https://devcenter.heroku.com/articles/procfile](https://devcenter.heroku.com/articles/procfile), [https://honcho.readthedocs.io/en/latest/](https://honcho.readthedocs.io/en/latest/), [http://gunicorn.org/](http://gunicorn.org/).
-- `web: gunicorn --pythonpath snailshell/ --bind :5494 --workers=3 snailshell.wsgi`
+1. Install Gunicorn.
+2. Create 'Procfile' in the base root folder and add the following script:`web: gunicorn --pythonpath snailshell/ --bind :5494 --workers=3 snailshell.wsgi`
+
+## Install Nginx on EC2 server(ubuntu)
+reference docs: [https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source](https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source)
+
+1. Follow the installation process guided in the reference document:
+  ``````
+  $ cd
+  $ NGINX_VERSION=1.8.1
+  $ wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
+  $ tar -xvzf nginx-${NGINX_VERSION}.tar.gz
+  $ cd nginx-${NGINX_VERSION}/
+  $ ./configure --with-http_ssl_module
+  $ make 
+  $ sudo make install
+  ``````
+2. Next, install following library: [https://github.com/JasonGiedymin/nginx-init-ubuntu](https://github.com/JasonGiedymin/nginx-init-ubuntu). This enables to manage nginx server more easily.
+
+## Setting Nginx configuration
+
+Access the file: ```$ sudo vi /usr/local/nginx/conf/nginx.conf```. Then replace the content as:
+```
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+    accept_mutex off;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile on;
+
+    server {
+        listen       80;
+        server_name  [DOMAIN ADDRESS];
+
+        client_max_body_size 4G;
+        keepalive_timeout 5;
+
+        return 301 https://$server_name$request_uri;
+    }
+
+    server {
+        listen  443 default_server ssl;
+        server_name  [DOMAIN ADDRESS];
+
+        client_max_body_size 4G;
+        keepalive_timeout 5;
+
+        ssl_certificate                 /etc/letsencrypt/live/[DOMAIN ADDRESS]/fullchain.pem;
+        ssl_certificate_key             /etc/letsencrypt/live/[DOMAIN ADDRESS]/privkey.pem;
+
+        location / {
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header HOST $http_host;
+            proxy_set_header X-NginX-Proxy true;
+
+            proxy_pass http://127.0.0.1:5736;
+            proxy_redirect off;
+        }
+    }
+}
+```
+
 
