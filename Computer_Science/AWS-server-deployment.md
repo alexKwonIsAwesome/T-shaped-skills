@@ -143,5 +143,20 @@ http {
     }
 }
 ```
+Before domain is ready, you can replace the [DOMAIN ADDRESS] into the EC2 instance's ip address. When the request is made to the server, it knows the request method and if it is http request it activates the one with 80 server dictionary settings. On the other hand, when it is https request, it runs 443 settings. In this case, we assume that the domain has ssl_certificate. If that is not the case, we have to change the setting accordingly.
 
+## Configuring SSL certification on domain
+reference: [https://letsencrypt.org/](https://letsencrypt.org/), [https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04).
 
+Perform commands under below:
+```
+git clone https://github.com/letsencrypt/letsencrypt
+cd letsencrypt
+./letsencrypt-auto --help
+```
+
+### Domain namse server configuration
+
+After creating hosted zones in route53 in aws, you should configure the dns setting on the domain. The NS type record set is the one should be input to the domain's dns server list.
+
+Next, create an A record set to connect the domain with the EC2's IP address.
