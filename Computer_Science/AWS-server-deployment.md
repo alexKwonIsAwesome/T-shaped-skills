@@ -178,7 +178,7 @@ http {
 
     server {
         listen       80;
-        server_name  xx.xx.xxx.xxx http://blabla.co;
+        server_name  xx.xx.xxx.xxx blabla.co;
 
         client_max_body_size 4G;
         keepalive_timeout 5;
@@ -199,7 +199,7 @@ http {
 
     server {
         listen  443 default_server ssl;
-        server_name  xx.xx.xxx.xxx http://blabla.co;
+        server_name  xx.xx.xxx.xxx blabla.co;
 
         client_max_body_size 4G;
         keepalive_timeout 5;
@@ -220,3 +220,4 @@ http {
     }
 }
 ```
+Run the command: ``` sudo service nginx restart ```
