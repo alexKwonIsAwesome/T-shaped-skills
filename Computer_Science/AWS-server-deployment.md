@@ -160,3 +160,63 @@ cd letsencrypt
 After creating hosted zones in route53 in aws, you should configure the dns setting on the domain. The NS type record set is the one should be input to the domain's dns server list.
 
 Next, create an A record set to connect the domain with the EC2's IP address.
+
+Then, configure the Nginx settings:
+```
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+    accept_mutex off;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile on;
+
+    server {
+        listen       80;
+        server_name  xx.xx.xxx.xxx http://blabla.co;
+
+        client_max_body_size 4G;
+        keepalive_timeout 5;
+
+        # return 301 https://$server_name$request_uri;
+
+        location / {
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header HOST $http_host;
+            proxy_set_header X-NginX-Proxy true;
+
+            proxy_pass http://127.0.0.1:5494;
+            proxy_redirect off;
+        }
+    }
+
+    server {
+        listen  443 default_server ssl;
+        server_name  xx.xx.xxx.xxx http://blabla.co;
+
+        client_max_body_size 4G;
+        keepalive_timeout 5;
+
+        # ssl_certificate                 /etc/letsencrypt/live/[DOMAIN ADDRESS]/fullchain.pem;
+        # ssl_certificate_key             /etc/letsencrypt/live/[DOMAIN ADDRESS]/privkey.pem;
+
+        location / {
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header HOST $http_host;
+            proxy_set_header X-NginX-Proxy true;
+
+            proxy_pass http://127.0.0.1:5494;
+            proxy_redirect off;
+        }
+    }
+}
+```
