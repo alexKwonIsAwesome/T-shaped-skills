@@ -221,3 +221,14 @@ http {
 }
 ```
 Run the command: ``` sudo service nginx restart ```
+
+### Getting SSL certification
+
+1. In the security group settings of EC2, opthe the port 443 to allow https request.
+2. Turn the nginx off: ```sudo service nginx stop```
+3. Run ```./letsencrypt-auto certonly --standalone -d snailshell.co``` for configuration.
+4. Now SSl certifications are generated in the directory
+  - private key: /etc/letsencrypt/live/snailshell.co/privkey.pem
+  - public key: /etc/letsencrypt/live/snailshell.co/fullchain.pem
+5. Now in ```$ sudo vi /usr/local/nginx/conf/nginx.conf``` file, change the first server dictionary settings to redirect the http request to https url: ```return 301 https://$server_name$request_uri;```. Then in the second server setting, type the ssl certificate location in the server computer. Also delete the IP address and input domain name only in `server_name` value.
+6. Restart nginx: ```sudo service nginx restart```
