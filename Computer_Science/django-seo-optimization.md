@@ -17,6 +17,6 @@ The meta tag works to show the search results' description and facebook's descri
         <meta property="og:url" content="https://snailshell.co">
         <meta property="og:site_name" content="달팽이등껍질">
         <meta property="og:image" content="https://drscdn.500px.org/photo/153331369/q%3D80_m%3D2000/a85e9a59f079b2d7ffe8f96933a11160">
-        <meta property="og:description" content="더이상 발품팔지 마세요, 원하시는 방을 대신 찾아드립니다. 원하는 조건을 입력하고 제시된 매물을 온라인에서 살펴>보세요!">
+        <meta property="og:description" content="더이상 발품팔지 마세요, 원하시는 방을 대신 찾아드립니다. 원하는 조건을 입력하고 제시된 매물을 온라인에서 살펴보세요!">
 
 ```
