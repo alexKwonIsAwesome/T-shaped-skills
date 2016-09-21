@@ -17,3 +17,18 @@ When using mixins in class based views, there are certain guideline in ordering 
 1. The base view classes by Django always go to the right
 2. Mixins go to the left of the base view
 3. Mixins should inherit from Python's built-in object type
+```
+# Example
+from django.views.generic import TemplateView
+
+class FreshFruitMixin(object):
+    
+  def get_context_data(self, **kwargs):
+    context = super(FreshFruitMixin, self).get_context_data(**kwargs)
+    context["has_fresh_fruit"] = True
+    return context
+
+
+class FruityFlavorView(FreshFruitMixin, TemplateView):
+  template_name = "fruity_flavor.html"
+```
