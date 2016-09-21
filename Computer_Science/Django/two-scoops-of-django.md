@@ -9,3 +9,11 @@ This is awesome django package that ables to use clear mixins in the General CBV
 ## Views are simply request and response function
 
 Django Views were mere function that takes HTTP request and turns into HTTP response. This is the basic concept of django views.
+
+## Mixin order in CBV
+
+When using mixins in class based views, there are certain guideline in ordering when using mixins in class inheritence. This rule of order is called `method resolution order` of python. The order proceeds from left to right.
+
+1. The base view classes by Django always go to the right
+2. Mixins go to the left of the base view
+3. Mixins should inherit from Python's built-in object type
